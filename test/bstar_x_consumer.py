@@ -9,7 +9,7 @@ def callback(msg):
 def main():
   conn = amqp.Connection()
   channel = conn.channel()
-  exch = channel.exchange_declare("test", "x-random", auto_delete=False)
+  exch = channel.exchange_declare("test", "x-bstar", auto_delete=False)
   
   q, _, _ = channel.queue_declare()
   channel.queue_bind(q, "test", "test")
