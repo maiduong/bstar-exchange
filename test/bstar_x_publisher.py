@@ -11,8 +11,8 @@ def main():
   while 1:
     send_str = "msg time - " + time.ctime()
     msg = amqp.Message(send_str)
-    server_ack = channel.basic_publish(msg, "test", "test")
-    print "send: ", send_str, " - ack: ", server_ack
+    channel.basic_publish(msg, "test", "test")
+    print "send: ", send_str
     time.sleep (1)
     
   channel.close()
