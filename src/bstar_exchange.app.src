@@ -1,6 +1,6 @@
-{application, random_exchange,
+{application, bstar_exchange,
  [
-  {description, "RabbitMQ Random Exchange Plugin"},
+  {description, "RabbitMQ BSTAR Exchange Plugin / Quant Edge"},
   {vsn, "0.1.0"},
   {modules, []},
   {registered, []},

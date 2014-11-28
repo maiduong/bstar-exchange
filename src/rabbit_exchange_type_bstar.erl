@@ -8,19 +8,21 @@
 %% the License for the specific language governing rights and
 %% limitations under the License.
 %%
+%% The modified code is Quant Edge
+%%
 %% The Original Code is RabbitMQ.
 %%
 %% The Initial Developer of the Original Code is VMware, Inc.
 %% Copyright (c) 2007-2011 VMware, Inc.  All rights reserved.
 %%
 
--module(rabbit_exchange_type_random).
+-module(rabbit_exchange_type_bstar).
 -behaviour(rabbit_exchange_type).
 -include_lib("rabbit_common/include/rabbit.hrl").
 
 -rabbit_boot_step({?MODULE, [
-  {description,   "exchange type random"},
-  {mfa,           {rabbit_registry, register, [exchange, <<"x-random">>, ?MODULE]}},
+  {description,   "exchange type bstar"},
+  {mfa,           {rabbit_registry, register, [exchange, <<"x-bstar">>, ?MODULE]}},
   {requires,      rabbit_registry},
   {enables,       kernel_ready}
 ]}).
@@ -41,7 +43,7 @@
 ]).
 
 description() ->
-    [{name, <<"x-random">>}, {description, <<"AMQP random exchange. Like a direct exchange, but randomly chooses who to route to.">>}].
+    [{name, <<"x-bstar">>}, {description, <<"AMQP BSTAR Exchange. Like a direct exchange, but only route to the first Connector / MASTER.">>}].
 
 route(_X=#exchange{name = Name},
       _D=#delivery{message = #basic_message{routing_keys = Routes}}) ->
@@ -49,12 +51,17 @@ route(_X=#exchange{name = Name},
     %io:format("exchange: ~p~n", [X]),
     %io:format("delivery: ~p~n", [D]),
     %io:format("matches: ~p~n", [Matches]),
-    case length(Matches) of
-      Len when Len < 2 -> Matches;
-      Len ->
-        Rand = crypto:rand_uniform(1, Len + 1),
-        [lists:nth(Rand, Matches)]
-    end.
+
+    %%removed, only route to first connector - the Master
+    %%case length(Matches) of
+    %%  Len when Len < 2 -> Matches;
+    %%  Len ->
+    %%    Rand = crypto:rand_uniform(1, Len + 1),
+    %%    [lists:nth(Rand, Matches)]
+    %%end.
+    
+    Len = length(Matches),
+    [lists:nth( Len, Matches)].
 
 serialise_events() -> false.
 validate(_X) -> ok.
